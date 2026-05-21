@@ -61,13 +61,22 @@ app.use(notFound);
 app.use(errorHandler);
 
 const start = async () => {
+  console.log('Starting API...', {
+    nodeEnv: process.env.NODE_ENV,
+    port: PORT,
+    hasMongoUri: Boolean(process.env.MONGODB_URI),
+    hasJwtSecret: Boolean(process.env.JWT_SECRET),
+    uploadProvider: process.env.UPLOAD_PROVIDER || 'local',
+  });
+
   await connectDB();
-  app.listen(PORT, () => {
+
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
   });
 };
 
 start().catch((err) => {
-  console.error('Failed to start server:', err);
+  console.error('Failed to start server:', err.message || err);
   process.exit(1);
 });
