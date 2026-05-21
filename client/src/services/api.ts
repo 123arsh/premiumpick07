@@ -5,24 +5,36 @@ type FetchOptions = RequestInit & { token?: string };
 
 async function request<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { token, headers, ...rest } = options;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...rest,
-    headers: {
-      ...(rest.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
-      ...headers,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    credentials: 'include',
-  });
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      ...rest,
+      headers: {
+        ...(rest.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      credentials: 'include',
+      signal: controller.signal,
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong');
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    return data;
+  } catch (error) {
+    if ((error as Error).name === 'AbortError') {
+      throw new Error('Request timed out. Please check your backend URL or network connection.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return data;
 }
 
 export const productApi = {
