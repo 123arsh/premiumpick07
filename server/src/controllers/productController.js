@@ -1,7 +1,12 @@
 import { Product } from '../models/Product.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { processAndStoreImage, deleteLocalImage } from '../utils/uploadImage.js';
+import {
+  processAndStoreImage,
+  deleteLocalImage,
+  deleteCloudinaryImage,
+  validateImageUrl,
+} from '../utils/uploadImage.js';
 
 const buildProductQuery = (query) => {
   const filter = { isActive: true };
@@ -92,6 +97,8 @@ export const createProduct = asyncHandler(async (req, res) => {
     throw new AppError('Product image is required', 400);
   }
 
+  validateImageUrl(imageUrl);
+
   const product = await Product.create({
     name: req.body.name,
     hoverTitle: req.body.hoverTitle,
@@ -121,11 +128,14 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   if (req.file) {
     const newUrl = await processAndStoreImage(req.file);
+    await deleteCloudinaryImage(product.imageUrl);
     await deleteLocalImage(product.imageUrl);
     updates.imageUrl = newUrl;
   } else if (req.body.imageUrl) {
     updates.imageUrl = req.body.imageUrl;
   }
+
+  validateImageUrl(updates.imageUrl);
 
   const updated = await Product.findByIdAndUpdate(req.params.id, updates, {
     new: true,
@@ -141,6 +151,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     throw new AppError('Product not found', 404);
   }
 
+  await deleteCloudinaryImage(product.imageUrl);
   await deleteLocalImage(product.imageUrl);
   await product.deleteOne();
 

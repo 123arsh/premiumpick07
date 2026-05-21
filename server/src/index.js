@@ -68,12 +68,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 const start = async () => {
+  const uploadMode =
+    process.env.UPLOAD_PROVIDER === 'cloudinary' || process.env.NODE_ENV === 'production'
+      ? 'cloudinary'
+      : 'local';
+
   console.log('Starting API...', {
     nodeEnv: process.env.NODE_ENV,
     port: PORT,
     hasMongoUri: Boolean(process.env.MONGODB_URI),
     hasJwtSecret: Boolean(process.env.JWT_SECRET),
-    uploadProvider: process.env.UPLOAD_PROVIDER || 'local',
+    uploadMode,
+    cloudinary: Boolean(process.env.CLOUDINARY_CLOUD_NAME),
   });
 
   await connectDB();
