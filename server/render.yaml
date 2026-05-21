@@ -1,0 +1,14 @@
+# Optional Render Blueprint — import repo or copy settings manually
+services:
+  - type: web
+    name: affiliate-api
+    runtime: node
+    rootDir: affliate_product/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: UPLOAD_PROVIDER
+        value: cloudinary
+    # Add MONGODB_URI, JWT_SECRET, CLOUDINARY_*, CLIENT_URL, SERVER_URL in Render dashboard
