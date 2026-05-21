@@ -10,6 +10,7 @@
     "seed:admin": "node src/utils/seedAdmin.js"
   },
   "dependencies": {
+    "affiliate-product-monorepo": "file:..",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
