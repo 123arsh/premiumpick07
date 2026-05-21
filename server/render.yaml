@@ -3,7 +3,7 @@ services:
   - type: web
     name: affiliate-api
     runtime: node
-    rootDir: affliate_product/server
+    rootDir: server
     buildCommand: npm install
     startCommand: npm start
     envVars:

@@ -2,13 +2,11 @@
   "name": "affiliate-product-monorepo",
   "private": true,
   "scripts": {
+    "start": "npm start --prefix server",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "seed": "npm run seed:admin --prefix server",
     "seed:admin": "npm run seed:admin --prefix server",
     "build": "npm run build --prefix client"
-  },
-  "dependencies": {
-    "mongodb": "^7.2.0"
   }
 }

@@ -57,10 +57,10 @@ Local `uploads/` folder does **not** persist on Render/Railway. Use Cloudinary i
 | Setting | Value |
 |---------|--------|
 | **Name** | `affiliate-api` (or any name) |
-| **Root Directory** | `affliate_product/server` |
+| **Root Directory** | `server` |
 | **Runtime** | Node |
 | **Build Command** | `npm install` |
-| **Start Command** | `npm start` |
+| **Start Command** | `npm start` (not `npm run dev`) |
 | **Instance type** | Free (or paid for always-on) |
 
 ### 3.2 Environment variables (Render → Environment)
