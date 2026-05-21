@@ -5,14 +5,13 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const adminPath = process.env.ADMIN_PATH || 'cp-internal-manage';
+const DEFAULT_API_URL = 'https://premiumpick07.onrender.com/api';
 
 const apiHostname = (() => {
   try {
-    return process.env.NEXT_PUBLIC_API_URL
-      ? new URL(process.env.NEXT_PUBLIC_API_URL).hostname
-      : 'localhost';
+    return new URL(process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL).hostname;
   } catch {
-    return 'localhost';
+    return new URL(DEFAULT_API_URL).hostname;
   }
 })();
 

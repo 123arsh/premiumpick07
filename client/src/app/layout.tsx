@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'Curated affiliate product recommendations — premium picks at the best prices.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://your-project.vercel.app'),
   openGraph: {
     type: 'website',
     locale: 'en_US',

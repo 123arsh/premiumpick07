@@ -87,6 +87,19 @@ Run API + `npm run dev` in `client/`.
 
 ---
 
+## Vercel environment variables
+
+Add the following to Vercel project settings:
+
+```env
+NEXT_PUBLIC_API_URL=https://premiumpick07.onrender.com/api
+NEXT_PUBLIC_SITE_URL=https://your-project.vercel.app
+```
+
+Then redeploy the frontend.
+
+---
+
 ## Troubleshooting
 
 | Problem | Fix |
