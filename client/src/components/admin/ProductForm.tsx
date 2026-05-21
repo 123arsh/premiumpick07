@@ -37,10 +37,12 @@ export function ProductForm({ initial, onSubmit, onCancel, loading }: ProductFor
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="mb-2 block text-sm font-medium">Product image</label>
+        <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Product image
+        </label>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           {preview && (
-            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl">
+            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700">
               <Image src={preview} alt="Preview" fill className="object-cover" />
             </div>
           )}
@@ -49,10 +51,12 @@ export function ProductForm({ initial, onSubmit, onCancel, loading }: ProductFor
             name="image"
             accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={handleFile}
-            className="text-sm text-zinc-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-brand-600"
+            className="text-sm text-zinc-600 dark:text-zinc-400 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-brand-600"
           />
         </div>
-        {!initial && <p className="mt-1 text-xs text-zinc-500">Required for new products</p>}
+        {!initial && (
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Required for new products</p>
+        )}
       </div>
 
       <Input name="name" label="Visible name" defaultValue={initial?.name} required />
@@ -67,7 +71,7 @@ export function ProductForm({ initial, onSubmit, onCancel, loading }: ProductFor
       <Input name="category" label="Category (optional)" defaultValue={initial?.category} />
       <Textarea name="description" label="Description (optional)" defaultValue={initial?.description} />
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-wrap gap-3 pt-2">
         <Button type="submit" loading={loading}>
           {initial ? 'Update product' : 'Add product'}
         </Button>

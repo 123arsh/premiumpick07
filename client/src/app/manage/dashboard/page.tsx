@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { ProductForm } from '@/components/admin/ProductForm';
 import { AdminProductList } from '@/components/admin/AdminProductList';
+import { AdminShell, AdminLoading } from '@/components/admin/AdminShell';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { adminApi } from '@/services/api';
@@ -117,68 +118,77 @@ export default function AdminDashboardPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-500/30 border-t-brand-500" />
-      </div>
-    );
-  }
+  if (loading) return <AdminLoading />;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <header className="border-b border-zinc-800">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <div>
-            <h1 className="text-lg font-semibold">Dashboard</h1>
-            <p className="text-sm text-zinc-400">Signed in as {username}</p>
-          </div>
-          <Button variant="ghost" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-      </header>
+    <AdminShell
+      title="Dashboard"
+      subtitle={`Signed in as ${username}`}
+      showLogout
+      onLogout={handleLogout}
+    >
+      <section className="mb-8">
+        <h2 className="font-display text-2xl font-normal tracking-tight sm:text-3xl">
+          Manage products
+        </h2>
+        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+          Add, edit, or remove affiliate products for your storefront.
+        </p>
+      </section>
 
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex-1 sm:max-w-md">
+          <svg
+            className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
           <Input
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="dark:bg-zinc-900 sm:max-w-xs"
+            className="pl-12"
           />
-          {!showForm && !editing && (
-            <Button onClick={() => setShowForm(true)}>+ Add product</Button>
-          )}
         </div>
-
-        {(showForm || editing) && (
-          <div className="mb-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-            <h2 className="mb-4 text-lg font-medium">
-              {editing ? 'Edit product' : 'New product'}
-            </h2>
-            <ProductForm
-              initial={editing}
-              onSubmit={editing ? handleUpdate : handleCreate}
-              onCancel={() => {
-                setShowForm(false);
-                setEditing(null);
-              }}
-              loading={formLoading}
-            />
-          </div>
+        {!showForm && !editing && (
+          <Button onClick={() => setShowForm(true)}>+ Add product</Button>
         )}
+      </div>
 
-        <AdminProductList
-          products={products}
-          onEdit={(p) => {
-            setEditing(p);
-            setShowForm(false);
-          }}
-          onDelete={handleDelete}
-          deletingId={deletingId}
-        />
-      </main>
-    </div>
+      {(showForm || editing) && (
+        <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-card dark:border-zinc-800 dark:bg-zinc-900/80">
+          <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            {editing ? 'Edit product' : 'New product'}
+          </h3>
+          <ProductForm
+            initial={editing}
+            onSubmit={editing ? handleUpdate : handleCreate}
+            onCancel={() => {
+              setShowForm(false);
+              setEditing(null);
+            }}
+            loading={formLoading}
+          />
+        </div>
+      )}
+
+      <AdminProductList
+        products={products}
+        onEdit={(p) => {
+          setEditing(p);
+          setShowForm(false);
+        }}
+        onDelete={handleDelete}
+        deletingId={deletingId}
+      />
+    </AdminShell>
   );
 }
