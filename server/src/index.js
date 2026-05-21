@@ -22,7 +22,13 @@ configureCloudinary();
 
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
   .split(',')
-  .map((o) => o.trim());
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const isLocalOrigin = (origin) =>
+  /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+const isDev = process.env.NODE_ENV !== 'production';
 
 app.use(
   helmet({
@@ -33,11 +39,12 @@ app.use(
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (isDev && isLocalOrigin(origin)) return callback(null, true);
+
+      console.warn('CORS blocked:', origin, '| Allowed:', allowedOrigins.join(', '));
+      callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
   })
