@@ -6,6 +6,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const adminPath = process.env.ADMIN_PATH || 'cp-internal-manage';
 
+const apiHostname = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_API_URL
+      ? new URL(process.env.NEXT_PUBLIC_API_URL).hostname
+      : 'localhost';
+  } catch {
+    return 'localhost';
+  }
+})();
+
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   env: {
@@ -15,6 +25,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'http', hostname: 'localhost', port: '5000', pathname: '/uploads/**' },
       { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },
+      { protocol: 'https', hostname: apiHostname, pathname: '/uploads/**' },
     ],
   },
   async rewrites() {
