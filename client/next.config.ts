@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const adminPath = process.env.ADMIN_PATH || 'cp-internal-manage';
+const adminPath = process.env.ADMIN_PATH || 'cp-x7k9m2n4p1q8';
 const DEFAULT_API_URL = 'https://premiumpick07.onrender.com/api';
 
 const apiHostname = (() => {
@@ -27,16 +27,11 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: apiHostname, pathname: '/uploads/**' },
     ],
   },
+  // Admin rewrites also handled in src/middleware.ts (runtime ADMIN_PATH on Vercel)
   async rewrites() {
     return [
-      {
-        source: `/${adminPath}`,
-        destination: '/manage',
-      },
-      {
-        source: `/${adminPath}/:path*`,
-        destination: '/manage/:path*',
-      },
+      { source: `/${adminPath}`, destination: '/manage' },
+      { source: `/${adminPath}/:path*`, destination: '/manage/:path*' },
     ];
   },
 };

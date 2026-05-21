@@ -1,110 +1,77 @@
-# Deploy frontend on Vercel + API on Render
+# Vercel + Render — fix checklist
 
-## Architecture
+## Admin panel URLs (try in order)
 
-| Part | Host |
-|------|------|
-| Website | **Vercel** (`client/`) |
-| API | **Render** (`server/`) |
-| Database | MongoDB Atlas |
-| Images | Cloudinary |
+1. **https://premiumpick07.vercel.app/cp-x7k9m2n4p1q8**
+2. If 404, try: **https://premiumpick07.vercel.app/cp-internal-manage**
+
+After redeploy with latest code, only your `ADMIN_PATH` from Vercel env will matter.
 
 ---
 
-## 1. Vercel — import project
+## Required Vercel environment variables
 
-1. [vercel.com](https://vercel.com) → **Add New** → **Project**
-2. Import GitHub repo `premiumpick07`
-3. Settings:
-
-| Setting | Value |
-|---------|--------|
-| **Framework** | Next.js |
-| **Root Directory** | `client` |
-| **Build Command** | `npm run build` (default) |
-
----
-
-## 2. Vercel — environment variables
-
-**Project → Settings → Environment Variables** (Production + Preview):
-
-| Key | Value |
-|-----|--------|
-| `NEXT_PUBLIC_API_URL` | `https://YOUR-API.onrender.com/api` |
-| `NEXT_PUBLIC_SITE_URL` | `https://YOUR-PROJECT.vercel.app` |
-| `NEXT_PUBLIC_SITE_NAME` | `Premium Picks` |
-| `NEXT_PUBLIC_SITE_DESCRIPTION` | Your tagline |
-| `ADMIN_PATH` | Your secret path (e.g. `cp-x7k9m2n4p1q8`) |
-
-Redeploy after adding variables (`ADMIN_PATH` is used at **build** time).
-
----
-
-## 3. Render — update CORS for Vercel
-
-**Render → Environment** → set:
-
-```env
-CLIENT_URL=https://YOUR-PROJECT.vercel.app
-```
-
-- Use **https**
-- **No** trailing slash
-- If you add a custom domain later, update this and redeploy Render
-
-Also ensure Render has: `MONGODB_URI`, `JWT_SECRET`, `UPLOAD_PROVIDER=cloudinary`, Cloudinary keys, `SERVER_URL=https://YOUR-API.onrender.com`
-
-**Manual Deploy** on Render after saving env vars.
-
----
-
-## 4. Your URLs
+**Settings → Environment Variables → Production:**
 
 ```
-Store:  https://your-project.vercel.app
-Admin:  https://your-project.vercel.app/YOUR_ADMIN_PATH
-API:    https://your-api.onrender.com/api/health
-```
-
----
-
-## 5. Local dev (optional)
-
-Keep `client/.env.local`:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-```
-
-Keep `server/.env`:
-
-```env
-CLIENT_URL=http://localhost:3000
-```
-
-Run API + `npm run dev` in `client/`.
-
----
-
-## Vercel environment variables
-
-Add the following to Vercel project settings:
-
-```env
 NEXT_PUBLIC_API_URL=https://premiumpick07.onrender.com/api
-NEXT_PUBLIC_SITE_URL=https://your-project.vercel.app
+NEXT_PUBLIC_SITE_URL=https://premiumpick07.vercel.app
+ADMIN_PATH=cp-x7k9m2n4p1q8
+NEXT_PUBLIC_SITE_NAME=Premium Picks
 ```
 
-Then redeploy the frontend.
+Use **NEXT_PUBLIC_** (all caps). Then **Redeploy**.
 
 ---
 
-## Troubleshooting
+## Required Render environment variables
 
-| Problem | Fix |
-|---------|-----|
-| Failed to fetch | `NEXT_PUBLIC_API_URL` must be Render URL, not localhost |
-| CORS error | Render `CLIENT_URL` must exactly match Vercel URL |
-| Admin 404 | Redeploy Vercel after changing `ADMIN_PATH` |
-| Images broken | Cloudinary on Render; redeploy Vercel after API URL set |
+```
+CLIENT_URL=https://premiumpick07.vercel.app
+SERVER_URL=https://premiumpick07.onrender.com
+MONGODB_URI=your_atlas_uri
+JWT_SECRET=32+_chars
+UPLOAD_PROVIDER=cloudinary
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+NODE_ENV=production
+```
+
+**Root Directory:** `server`  
+**Start Command:** `npm start`
+
+---
+
+## Wake up Render (free tier)
+
+Open in browser first (wait 30–60 seconds):
+
+**https://premiumpick07.onrender.com/api/health**
+
+Must show: `{"success":true,"message":"API is running"}`
+
+If this fails, admin login on Vercel will not work.
+
+---
+
+## Admin login
+
+| Field | Value |
+|--------|--------|
+| URL | `https://premiumpick07.vercel.app/cp-x7k9m2n4p1q8` |
+| Username | `admin` |
+| Password | Your `ADMIN_PASSWORD` from Render (or local seed) |
+
+---
+
+## Push latest fixes
+
+```powershell
+cd "c:\Users\prince\3D Objects\Imp Project\affliate_product"
+git add .
+git commit -m "fix: admin panel routing on Vercel"
+git push origin main
+```
+
+Vercel auto-redeploys from GitHub.
