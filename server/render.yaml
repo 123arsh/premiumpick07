@@ -4,7 +4,7 @@ services:
     name: affiliate-api
     runtime: node
     rootDir: server
-    buildCommand: npm install
+    buildCommand: npm install && npm install --prefix server
     startCommand: npm start
     envVars:
       - key: NODE_ENV
