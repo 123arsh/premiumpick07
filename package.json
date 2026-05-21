@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "start": "npm start --prefix server",
+    "dev": "npm start --prefix server",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
     "seed": "npm run seed:admin --prefix server",
