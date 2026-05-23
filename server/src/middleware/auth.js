@@ -15,6 +15,11 @@ export const protect = asyncHandler(async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  if (decoded.purpose && decoded.purpose !== 'auth') {
+    throw new AppError('Not authorized. Please log in.', 401);
+  }
+
   const admin = await Admin.findById(decoded.id);
 
   if (!admin) {

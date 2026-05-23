@@ -91,4 +91,26 @@ export const adminApi = {
 
   deleteProduct: (token: string, id: string) =>
     request(`/admin/products/${id}`, { method: 'DELETE', token }),
+
+  changePassword: (
+    token: string,
+    body: { currentPassword: string; newPassword: string }
+  ) =>
+    request<{ success: boolean; message: string }>('/admin/change-password', {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      token,
+    }),
+
+  forgotPassword: (username: string, resetSecret: string) =>
+    request<{ success: boolean; message: string; data: { resetToken: string } }>(
+      '/admin/forgot-password',
+      { method: 'POST', body: JSON.stringify({ username, resetSecret }) }
+    ),
+
+  resetPassword: (body: { token: string; newPassword: string; confirmPassword: string }) =>
+    request<{ success: boolean; message: string }>('/admin/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 };

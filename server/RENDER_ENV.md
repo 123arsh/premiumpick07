@@ -9,7 +9,8 @@ Copy these into **Render → your service → Environment**.
 | `JWT_SECRET` | Yes | Min 32 characters |
 | `JWT_EXPIRES_IN` | No | `7d` |
 | `ADMIN_USERNAME` | No | `admin` |
-| `ADMIN_PASSWORD` | No | For seed only |
+| `ADMIN_PASSWORD` | No | For seed / `npm run admin:password` |
+| `ADMIN_RESET_SECRET` | Yes | Recovery secret for forgot-password flow |
 | `SERVER_URL` | Yes | `https://YOUR-SERVICE.onrender.com` |
 | `CLIENT_URL` | Yes | `https://YOUR-SITE.netlify.app` |
 | `UPLOAD_PROVIDER` | Yes | `cloudinary` |

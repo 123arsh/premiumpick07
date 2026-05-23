@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { ProductForm } from '@/components/admin/ProductForm';
 import { AdminProductList } from '@/components/admin/AdminProductList';
 import { AdminShell, AdminLoading } from '@/components/admin/AdminShell';
+import { ChangePasswordForm } from '@/components/admin/ChangePasswordForm';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { adminApi } from '@/services/api';
@@ -25,6 +26,7 @@ export default function AdminDashboardPage() {
   const [search, setSearch] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [username, setUsername] = useState('');
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   const loadProducts = useCallback(async (t: string, q?: string) => {
     try {
@@ -135,6 +137,22 @@ export default function AdminDashboardPage() {
           Add, edit, or remove affiliate products for your storefront.
         </p>
       </section>
+
+      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/80">
+        <button
+          type="button"
+          onClick={() => setShowPasswordForm((v) => !v)}
+          className="flex w-full items-center justify-between px-6 py-4 text-left text-sm font-medium text-zinc-900 dark:text-zinc-100"
+        >
+          Account security — change password
+          <span className="text-zinc-400">{showPasswordForm ? '−' : '+'}</span>
+        </button>
+        {showPasswordForm && token && (
+          <div className="border-t border-zinc-200 px-6 py-5 dark:border-zinc-800">
+            <ChangePasswordForm token={token} />
+          </div>
+        )}
+      </div>
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 sm:max-w-md">

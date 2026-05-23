@@ -5,6 +5,9 @@ import {
   login,
   logout,
   getMe,
+  changePassword,
+  forgotPassword,
+  resetPassword,
 } from '../controllers/authController.js';
 import {
   getAdminProducts,
@@ -45,8 +48,49 @@ router.post(
   login
 );
 
+const passwordRules = [
+  body('newPassword').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+];
+
+router.post(
+  '/forgot-password',
+  loginLimiter,
+  [
+    body('username').trim().notEmpty().withMessage('Username is required'),
+    body('resetSecret').notEmpty().withMessage('Recovery secret is required'),
+    validate,
+  ],
+  forgotPassword
+);
+
+router.post(
+  '/reset-password',
+  loginLimiter,
+  [
+    body('token').notEmpty().withMessage('Reset token is required'),
+    ...passwordRules,
+    body('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.newPassword) throw new Error('Passwords do not match');
+      return true;
+    }),
+    validate,
+  ],
+  resetPassword
+);
+
 router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
+
+router.put(
+  '/change-password',
+  protect,
+  [
+    body('currentPassword').notEmpty().withMessage('Current password is required'),
+    ...passwordRules,
+    validate,
+  ],
+  changePassword
+);
 
 router.use(protect);
 

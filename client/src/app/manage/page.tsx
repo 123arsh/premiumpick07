@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -92,6 +93,15 @@ export default function AdminLoginPage() {
               Sign in
             </Button>
           </form>
+
+          <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <Link
+              href={`${getAdminBasePath()}/forgot`}
+              className="text-brand-500 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </p>
         </div>
       </div>
     </div>
